@@ -14,7 +14,7 @@ OBJECT_TYPE = "sphere"
 OBJECT_MESH = "/Engine/BasicShapes/Sphere"
 OBJECT_POSITION = [50, -500, 100]
 OBJECT_SCALE = [2, 2, 2]
-OBJECT_COLOR = "yellow"
+OBJECT_COLOR = "green"
 
 # Camera position - front view from step2
 CAMERA_POSITION = [550, -500, 100]
@@ -48,7 +48,7 @@ def main():
                 "rotation": [0, 0, 0],
                 "scale": OBJECT_SCALE,
                 "color": OBJECT_COLOR,
-                "label": f"Yellow{OBJECT_TYPE.capitalize()}"
+                "label": f"{OBJECT_COLOR.capitalize()}{OBJECT_TYPE.capitalize()}"
             }
         ]
     }
@@ -88,7 +88,7 @@ def main():
 
     print("\n" + "=" * 60)
     print("DONE - Check the Unreal viewport!")
-    print(f"Can you see the yellow {OBJECT_TYPE}?")
+    print(f"Can you see the {OBJECT_COLOR} {OBJECT_TYPE}?")
     print("=" * 60)
     print("\nIf you can see it, run step2_take_screenshot.py to capture images.")
 
