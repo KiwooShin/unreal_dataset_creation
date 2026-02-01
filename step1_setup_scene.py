@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
 Step 1: Setup scene and position camera
-Run this first to verify the cube is visible in the viewport.
+Run this first to verify the object is visible in the viewport.
 """
 
 import requests
@@ -10,9 +10,11 @@ import json
 API_URL = "http://localhost:8080"
 
 # Scene configuration (matches step2)
-CUBE_POSITION = [50, -500, 100]
-CUBE_SCALE = [2, 2, 2]
-CUBE_COLOR = "yellow"
+OBJECT_TYPE = "sphere"
+OBJECT_MESH = "/Engine/BasicShapes/Sphere"
+OBJECT_POSITION = [50, -500, 100]
+OBJECT_SCALE = [2, 2, 2]
+OBJECT_COLOR = "yellow"
 
 # Camera position - front view from step2
 CAMERA_POSITION = [550, -500, 100]
@@ -34,25 +36,19 @@ def main():
         print("Run in Unreal: exec(open('/Users/kiwooshin/work/unreal_dataset_creation/unreal_api_server_v2.py').read())")
         return
 
-    # Setup scene (spawn ground and cube, no lighting)
-    print("\nSetting up scene...")
+    # Setup scene (spawn ground and object)
+    print(f"\nSetting up scene with {OBJECT_TYPE}...")
     scene_config = {
         "cleanup_before": True,
-        # "add_ground": False,
-        # "ground": {
-        #     "position": [0, 0, 0],
-        #     "scale": [50, 50, 1],
-        #     "color": "gray"
-        # },
         "objects": [
             {
-                "type": "cube",
-                "mesh": "/Engine/BasicShapes/Cube",
-                "position": CUBE_POSITION,
+                "type": OBJECT_TYPE,
+                "mesh": OBJECT_MESH,
+                "position": OBJECT_POSITION,
                 "rotation": [0, 0, 0],
-                "scale": CUBE_SCALE,
-                "color": CUBE_COLOR,
-                "label": "YellowCube"
+                "scale": OBJECT_SCALE,
+                "color": OBJECT_COLOR,
+                "label": f"Yellow{OBJECT_TYPE.capitalize()}"
             }
         ]
     }
@@ -69,14 +65,14 @@ def main():
     # Position camera
     print("\nPositioning camera...")
     print(f"  Position: {CAMERA_POSITION}")
-    print(f"  Looking at: {CUBE_POSITION}")
+    print(f"  Looking at: {OBJECT_POSITION}")
 
     # Use the capture endpoint but without actually saving - just to position camera
     capture_config = {
         "name": "position_only",
         "camera": {
             "position": CAMERA_POSITION,
-            "look_at": CUBE_POSITION,
+            "look_at": OBJECT_POSITION,
             "fov": 90.0
         },
         "output": {
@@ -92,10 +88,9 @@ def main():
 
     print("\n" + "=" * 60)
     print("DONE - Check the Unreal viewport!")
-    print("Can you see the yellow cube?")
+    print(f"Can you see the yellow {OBJECT_TYPE}?")
     print("=" * 60)
-    print("\nIf you can see the cube, run get_viewport_camera.py")
-    print("to capture the exact camera values, then we'll take screenshots.")
+    print("\nIf you can see it, run step2_take_screenshot.py to capture images.")
 
 if __name__ == "__main__":
     main()

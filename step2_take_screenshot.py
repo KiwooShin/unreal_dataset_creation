@@ -10,12 +10,12 @@ import time
 API_URL = "http://localhost:8080"
 OUTPUT_DIR = "/Users/kiwooshin/work/unreal_dataset_creation/dataset_output"
 
-CUBE_POSITION = [50, -500, 100]
+OBJECT_POSITION = [50, -500, 100]
 
 CAMERA_CONFIGS = [
-    {"name": "front", "position": [550, -500, 100], "filename": "cube_front.png"},
-    {"name": "top", "position": [50, -500, 600], "filename": "cube_top.png"},
-    {"name": "diagonal", "position": [300, -250, 454], "filename": "cube_diagonal.png"},
+    {"name": "front", "position": [550, -500, 100], "filename": "sphere_front.png"},
+    {"name": "top", "position": [50, -500, 600], "filename": "sphere_top.png"},
+    {"name": "diagonal", "position": [300, -250, 454], "filename": "sphere_diagonal.png"},
 ]
 
 def take_screenshot(camera_config):
@@ -24,7 +24,7 @@ def take_screenshot(camera_config):
         "name": camera_config["name"],
         "camera": {
             "position": camera_config["position"],
-            "look_at": CUBE_POSITION,
+            "look_at": OBJECT_POSITION,
             "fov": 90.0
         },
         "output": {
@@ -72,7 +72,7 @@ def main():
         print("ERROR: API server not running")
         return
 
-    print(f"\nCube center: {CUBE_POSITION}")
+    print(f"\nObject center: {OBJECT_POSITION}")
     print(f"Taking {len(CAMERA_CONFIGS)} screenshots...\n")
 
     results = []
