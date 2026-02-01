@@ -9,14 +9,13 @@ import json
 
 API_URL = "http://localhost:8080"
 
-# Scene configuration
-CUBE_POSITION = [0, 0, 100]
+# Scene configuration (matches step2)
+CUBE_POSITION = [50, -500, 100]
 CUBE_SCALE = [2, 2, 2]
 CUBE_COLOR = "yellow"
 
-# Camera position - we'll get working values from user
-CAMERA_POSITION = [259.01, 130.09, 713.33]
-CAMERA_ROTATION = [-90.0, -120.59, -7.14]  # [Pitch, Yaw, Roll]
+# Camera position - front view from step2
+CAMERA_POSITION = [550, -500, 100]
 
 def main():
     print("=" * 60)
@@ -70,14 +69,14 @@ def main():
     # Position camera
     print("\nPositioning camera...")
     print(f"  Position: {CAMERA_POSITION}")
-    print(f"  Rotation: Pitch={CAMERA_ROTATION[0]}, Yaw={CAMERA_ROTATION[1]}, Roll={CAMERA_ROTATION[2]}")
+    print(f"  Looking at: {CUBE_POSITION}")
 
     # Use the capture endpoint but without actually saving - just to position camera
     capture_config = {
         "name": "position_only",
         "camera": {
             "position": CAMERA_POSITION,
-            "rotation": CAMERA_ROTATION,
+            "look_at": CUBE_POSITION,
             "fov": 90.0
         },
         "output": {
