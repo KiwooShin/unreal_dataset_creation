@@ -1,283 +1,179 @@
-# Unreal Engine Synthetic Dataset Generator
+# Unreal Engine Dataset Creator
 
-Generate synthetic datasets for deep learning using Unreal Engine 5.6 and Python.
+Python-based tool for capturing multi-angle screenshots from Unreal Engine 5 via HTTP API.
 
-## System Info
+## Overview
 
-- **Unreal Engine:** 5.6.1
-- **Python:** 3.11.x (bundled with UE)
-- **Platform:** macOS
-- **Installation:** `/Users/Shared/Epic Games/UE_5.6/`
+This tool allows you to:
+- Control Unreal Engine scenes via HTTP API
+- Set up objects (cubes) with configurable positions and colors
+- Capture screenshots from multiple camera angles (front, top, diagonal)
+- Use `look_at` to automatically point camera at objects
 
----
+## Requirements
 
-## Choose Your Approach
+- Unreal Engine 5.6+
+- Python 3.x (for running client scripts)
 
-### 🔥 Approach 1: ML-Driven Pipeline (Recommended for Production)
+## Files
 
-**Best for:**
-- Running ML models (PyTorch, TensorFlow, object detection)
-- Processing real-world images to create digital twins
-- Need full Python ecosystem and ML libraries
-- Headless/scalable production workflows
+| File | Description |
+|------|-------------|
+| `unreal_api_server_v2.py` | HTTP API server (runs inside Unreal) |
+| `step1_setup_scene.py` | Sets up scene with cube and ground |
+| `step2_take_screenshot.py` | Captures screenshots from 3 angles |
+| `get_cube_location.py` | Utility: get current cube position |
+| `get_viewport_camera.py` | Utility: get current camera position |
 
-**Quick Start:** [QUICK_START.md](QUICK_START.md) (10 minutes)
+## Setup
 
-**Key Features:**
-- External Python with full ML support
-- HTTP API communication
-- Digital twin generation from object detection
-- Scalable to headless rendering
+### 1. Create Unreal Project
 
-**Files:**
-- `ml_controller.py` - Main pipeline (runs in terminal)
-- `unreal_api_server.py` - API server (runs in Unreal)
-- `object_library.py` - Object definitions
+1. Open Unreal Engine 5.6+
+2. Create a new **Blank** project
+3. Add basic lighting to the level:
+   - Directional Light (for sun)
+   - Sky Light (for ambient)
+   - Sky Atmosphere (optional, for sky)
 
-**Documentation:**
-- [QUICK_START.md](QUICK_START.md) - Get started in 10 minutes
-- [ML_DRIVEN_ARCHITECTURE.md](ML_DRIVEN_ARCHITECTURE.md) - Architecture overview
-- [HEADLESS_SETUP_GUIDE.md](HEADLESS_SETUP_GUIDE.md) - Complete setup guide
+### 2. Enable Python in Unreal
 
----
+1. Go to **Edit > Plugins**
+2. Search for "Python"
+3. Enable **Python Editor Script Plugin**
+4. Restart Unreal Editor
 
-### 📦 Approach 2: Simple In-Engine Python (Good for Learning)
+### 3. Open Python Console
 
-**Best for:**
-- Learning Unreal Python basics
-- Simple cube generation and testing
-- No ML models needed
-- Quick prototyping
+1. Go to **Window > Developer Tools > Output Log**
+2. At the bottom, there's a command input field
+3. Change dropdown from "Cmd" to "Python"
 
-**Quick Start:** [SETUP_INSTRUCTIONS.md](SETUP_INSTRUCTIONS.md)
+## Usage
 
-**Key Features:**
-- Everything runs inside Unreal's Python
-- Simple, straightforward workflow
-- Good for understanding the basics
+### Step 1: Start the API Server
 
-**Files:**
-- `basic_cube_screenshot.py` - Single cube test
-- `generate_dataset.py` - Basic dataset generator
+In Unreal's Python console, run:
 
-**Documentation:**
-- [SETUP_INSTRUCTIONS.md](SETUP_INSTRUCTIONS.md) - Setup guide
-- [plan.md](plan.md) - Original planning document
-
----
-
-## Quick Decision Guide
-
-**Use Approach 1 (ML-Driven) if:**
-- ✅ You need to run object detection models
-- ✅ You're processing real-world images
-- ✅ You need PyTorch/TensorFlow/OpenCV
-- ✅ You want to scale to large datasets
-- ✅ You need external Python control
-
-**Use Approach 2 (Simple) if:**
-- ✅ You're just learning Unreal Python
-- ✅ You want something simple to start
-- ✅ You don't need ML libraries
-- ✅ You're testing basic concepts
-
-## File Structure
-
-```
-unreal/
-# Start Here
-├── README.md                      # This file
-├── QUICK_START.md                 # 10-min ML-driven setup ⭐ START HERE
-
-# ML-Driven Approach (Recommended)
-├── ML_DRIVEN_ARCHITECTURE.md      # Architecture overview
-├── HEADLESS_SETUP_GUIDE.md        # Complete setup guide
-├── unreal_api_server.py           # HTTP server (run in Unreal)
-├── ml_controller.py               # ML pipeline (run in terminal)
-├── object_library.py              # Object definitions
-├── requirements.txt               # Python dependencies
-
-# Simple Approach (Learning)
-├── SETUP_INSTRUCTIONS.md          # Simple setup guide
-├── basic_cube_screenshot.py       # Basic test script
-├── generate_dataset.py            # Basic dataset generator
-
-# Planning & Documentation
-├── plan.md                        # Original planning document
-├── HEADLESS_RENDERING.md          # Headless options explained
-
-# Output Directories
-├── ml_env/                        # Python virtual environment
-├── renders/                       # ML pipeline output
-├── output/                        # Simple approach output
-└── dataset/                       # Dataset output
-    ├── images/                    # Generated images
-    └── metadata/                  # JSON annotations
+```python
+exec(open('/Users/kiwooshin/work/unreal_dataset_creation/unreal_api_server_v2.py').read())
 ```
 
-## Key Scripts Overview
+You should see: `API server started on port 8080`
 
-### ML-Driven Approach
+### Step 2: Setup the Scene
 
-**unreal_api_server.py** (runs in Unreal Editor)
-- HTTP server listening on port 8080
-- Receives scene descriptions via REST API
-- Creates objects and renders scenes
-- Returns image paths and metadata
+In your terminal, run:
 
-**ml_controller.py** (runs in terminal with your Python)
-- Loads real-world images
-- Runs object detection (PyTorch/TensorFlow)
-- Converts detections to scene descriptions
-- Sends to Unreal via HTTP API
-- Generates variations with randomization
+```bash
+cd /Users/kiwooshin/work/unreal_dataset_creation
+python step1_setup_scene.py
+```
 
-**object_library.py** (configuration)
-- Maps detected objects to Unreal meshes
-- Defines object properties (scale, materials, colors)
-- Customizable for your object types
+This spawns:
+- A ground plane
+- A yellow cube at position `[0, 0, 100]`
 
-### Simple Approach
+### Step 3: Capture Screenshots
 
-**basic_cube_screenshot.py**
-- Single cube demonstration
-- Good for testing setup
-- Run in Unreal Python console
+In your terminal, run:
 
-**generate_dataset.py**
-- Randomized cube generation
-- Configurable parameters
-- Run in Unreal Python console
+```bash
+python step2_take_screenshot.py
+```
 
-## Metadata Format
+This captures 3 screenshots from different angles:
+- `cube_front.png` - Front view
+- `cube_top.png` - Top-down view
+- `cube_diagonal.png` - 45° diagonal view
 
-Each image has a corresponding JSON file with:
+Output is saved to `dataset_output/` directory.
 
-```json
+## Utility Scripts
+
+### Get Cube Location
+
+If you manually move the cube in Unreal, get its new position:
+
+```python
+exec(open('/Users/kiwooshin/work/unreal_dataset_creation/get_cube_location.py').read())
+```
+
+### Get Viewport Camera
+
+Get current viewport camera position and rotation:
+
+```python
+exec(open('/Users/kiwooshin/work/unreal_dataset_creation/get_viewport_camera.py').read())
+```
+
+## Configuration
+
+### Modifying Camera Positions
+
+Edit `step2_take_screenshot.py`:
+
+```python
+CUBE_POSITION = [50, -500, 100]  # Look-at target
+
+CAMERA_CONFIGS = [
+    {"name": "front", "position": [550, -500, 100], "filename": "cube_front.png"},
+    {"name": "top", "position": [50, -500, 600], "filename": "cube_top.png"},
+    {"name": "diagonal", "position": [300, -250, 454], "filename": "cube_diagonal.png"},
+]
+```
+
+### Modifying Scene Setup
+
+Edit `step1_setup_scene.py`:
+
+```python
+CUBE_POSITION = [0, 0, 100]
+CUBE_SCALE = [2, 2, 2]
+CUBE_COLOR = "yellow"
+```
+
+## API Endpoints
+
+The server exposes these HTTP endpoints:
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/status` | GET | Check server status |
+| `/setup_scene` | POST | Set up scene with objects |
+| `/capture` | POST | Capture screenshot |
+| `/cleanup` | POST | Remove spawned objects |
+
+### Capture with look_at
+
+```python
 {
-  "index": 0,
-  "image_filename": "cube_0000.png",
-  "cube": {
-    "position": {"x": 123.4, "y": -56.7, "z": 189.0},
-    "rotation": {"pitch": 45.2, "yaw": 180.5, "roll": 0.0},
-    "scale": {"x": 2.5, "y": 2.5, "z": 2.5}
-  },
-  "camera": {
-    "position": {"x": 456.7, "y": 123.4, "z": 300.0},
-    "rotation": {"pitch": -15.3, "yaw": 90.0, "roll": 0.0}
-  },
-  "image_dimensions": {
-    "width": 1920,
-    "height": 1080
-  }
+    "camera": {
+        "position": [500, 0, 100],
+        "look_at": [0, 0, 100],  # Auto-calculates rotation
+        "fov": 90.0
+    },
+    "output": {
+        "filename": "screenshot.png",
+        "resolution": [640, 640]
+    }
 }
 ```
 
-## Tips for Better Results
-
-### 1. Add Lighting
-Before running scripts, add to your level:
-- Directional Light (sun)
-- Sky Light (ambient)
-- Post Process Volume (effects)
-
-### 2. Add Background
-- Sky Sphere
-- Environment assets
-- HDRI backdrop
-
-### 3. Camera Setup
-- Set `use_camera: True` in CONFIG for better framing
-- Adjust `camera_distance_range` to control view distance
-
-### 4. Materials & Textures
-Modify the scripts to:
-- Load different materials
-- Apply textures to cubes
-- Randomize colors
-
-### 5. Multiple Objects
-Extend the script to spawn multiple cubes per scene for more complex datasets.
-
 ## Troubleshooting
 
-### Script runs but no images appear
-- Check the output directory path
-- Ensure viewport is visible
-- Add lighting to your scene
+### "Cannot connect to API server"
+- Make sure you ran the server in Unreal's Python console
+- Check that port 8080 is not blocked
 
-### Images are black
-- Add lights to your scene
-- Move cube to visible position
-- Check camera is pointing at cube
+### Black screenshots
+- Add lighting to your Unreal level (Directional Light + Sky Light)
+- Ensure the cube is within camera view
 
-### Performance is slow
-- Reduce image resolution
-- Disable real-time rendering
-- Use simpler materials
+### Cube not centered in frame
+- Run `get_cube_location.py` to get actual cube position
+- Update `CUBE_POSITION` in `step2_take_screenshot.py`
 
-### Can't find output files
-- Check the absolute path in CONFIG
-- Verify write permissions
-- Look for error messages in console
+## License
 
-## Next Steps
-
-1. **Test basic script** to verify setup
-2. **Run dataset generator** with small num_images (e.g., 5)
-3. **Review output** images and metadata
-4. **Customize CONFIG** for your needs
-5. **Scale up** to full dataset size
-6. **Extend scripts** with:
-   - Multiple object types
-   - Different backgrounds
-   - Varied lighting conditions
-   - Segmentation masks
-   - Bounding boxes
-
-## Resources
-
-- [plan.md](plan.md) - Comprehensive planning document
-- [SETUP_INSTRUCTIONS.md](SETUP_INSTRUCTIONS.md) - Setup guide
-- [UE Python API Docs](https://docs.unrealengine.com/5.6/en-US/PythonAPI/)
-- [Scripting Guide](https://docs.unrealengine.com/5.6/en-US/scripting-the-unreal-editor-using-python/)
-
-## Resources & Documentation
-
-### ML-Driven Pipeline
-- [QUICK_START.md](QUICK_START.md) - **Start here!** (10 minutes)
-- [ML_DRIVEN_ARCHITECTURE.md](ML_DRIVEN_ARCHITECTURE.md) - Architecture details
-- [HEADLESS_SETUP_GUIDE.md](HEADLESS_SETUP_GUIDE.md) - Complete setup
-- [HEADLESS_RENDERING.md](HEADLESS_RENDERING.md) - Headless options
-
-### Simple Approach
-- [SETUP_INSTRUCTIONS.md](SETUP_INSTRUCTIONS.md) - Simple setup guide
-- [plan.md](plan.md) - Original planning document
-
-### External Resources
-- [UE Python API Docs](https://docs.unrealengine.com/5.6/en-US/PythonAPI/)
-- [Scripting Guide](https://docs.unrealengine.com/5.6/en-US/scripting-the-unreal-editor-using-python/)
-
----
-
-## 🚀 Ready to Start?
-
-### For ML-Driven Pipeline (Recommended)
-**Open [QUICK_START.md](QUICK_START.md) and follow the 10-minute setup!**
-
-### For Simple Approach
-**Open [SETUP_INSTRUCTIONS.md](SETUP_INSTRUCTIONS.md)**
-
----
-
-## Your Use Case
-
-Based on your requirements:
-- ✅ Real-world image processing
-- ✅ Object detection → Digital twin generation
-- ✅ Run 3D detection models
-- ✅ Randomize properties for synthetic data
-
-**→ Use the ML-Driven Pipeline (Approach 1)**
-
-Start with [QUICK_START.md](QUICK_START.md)!
+MIT
