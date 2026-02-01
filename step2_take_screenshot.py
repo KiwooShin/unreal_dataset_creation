@@ -29,7 +29,7 @@ def take_screenshot(camera_config):
         },
         "output": {
             "filename": camera_config["filename"],
-            "resolution": [640, 640]
+            "resolution": [128, 128]
         },
         "save_metadata": False
     }
