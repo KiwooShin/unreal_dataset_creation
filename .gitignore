@@ -4,3 +4,4 @@ dataset_output/
 output/
 renders/
 *.png
+!results/**/*.png
