@@ -14,7 +14,7 @@ OBJECT_TYPE = "sphere"
 OBJECT_MESH = "/Engine/BasicShapes/Sphere"
 OBJECT_POSITION = [50, -500, 100]
 OBJECT_SCALE = [2, 2, 2]
-OBJECT_COLOR = "green"
+OBJECT_COLOR = "red"
 
 # Camera position - front view from step2
 CAMERA_POSITION = [550, -500, 100]

@@ -76,42 +76,69 @@ def cleanup_scene():
     unreal.log("Scene cleaned up")
 
 
-def create_colored_material(color_name):
+def create_colored_material(color_name, mesh_component=None):
     """
-    Create or get a colored material
+    Create a dynamic material instance with the specified color.
 
     Args:
-        color_name: 'yellow', 'red', 'blue', 'green', 'white', 'gray'
+        color_name: 'yellow', 'red', 'blue', 'green', 'white', 'gray', 'orange'
+        mesh_component: Optional StaticMeshComponent to create dynamic material from
 
     Returns:
-        Material instance or None
+        MaterialInstanceDynamic or None
     """
-    # Color definitions (R, G, B)
+    # Color definitions (R, G, B, A)
     colors = {
-        'yellow': (1.0, 1.0, 0.0),
-        'red': (1.0, 0.0, 0.0),
-        'blue': (0.0, 0.0, 1.0),
-        'green': (0.0, 1.0, 0.0),
-        'white': (1.0, 1.0, 1.0),
-        'gray': (0.5, 0.5, 0.5),
-        'orange': (1.0, 0.5, 0.0),
+        'yellow': (1.0, 1.0, 0.0, 1.0),
+        'red': (1.0, 0.0, 0.0, 1.0),
+        'blue': (0.0, 0.0, 1.0, 1.0),
+        'green': (0.0, 1.0, 0.0, 1.0),
+        'white': (1.0, 1.0, 1.0, 1.0),
+        'gray': (0.5, 0.5, 0.5, 1.0),
+        'orange': (1.0, 0.5, 0.0, 1.0),
     }
 
     if color_name not in colors:
         unreal.log_warning(f"Unknown color: {color_name}, using default")
         return None
 
-    # Try to load existing material
-    material_path = f'/Game/Materials/M_{color_name.capitalize()}'
-    if unreal.EditorAssetLibrary.does_asset_exist(material_path):
-        return unreal.EditorAssetLibrary.load_asset(material_path)
+    r, g, b, a = colors[color_name]
+    linear_color = unreal.LinearColor(r, g, b, a)
 
-    # For now, we'll use the engine's default material
-    # Creating materials programmatically is complex
-    # The user can create these materials manually once
-    unreal.log(f"Material {material_path} not found. Using default material.")
-    unreal.log(f"To get colored materials, create them manually in editor.")
+    # Try to load custom base material with color parameter first
+    base_material_path = '/Engine/EngineMaterials/M_ColorBase'
+    if unreal.EditorAssetLibrary.does_asset_exist(base_material_path):
+        base_material = unreal.EditorAssetLibrary.load_asset(base_material_path)
+        if base_material:
+            # Create dynamic instance
+            mid = unreal.KismetMaterialLibrary.create_dynamic_material_instance(
+                unreal.EditorLevelLibrary.get_editor_world(),
+                base_material
+            )
+            if mid:
+                mid.set_vector_parameter_value("BaseColor", linear_color)
+                unreal.log(f"Created dynamic material with color: {color_name}")
+                return mid
 
+    # Fallback: Create dynamic material from mesh component's current material
+    if mesh_component:
+        try:
+            mid = mesh_component.create_dynamic_material_instance(0)
+            if mid:
+                # Try common parameter names
+                for param_name in ["BaseColor", "Color", "Base Color", "Tint"]:
+                    try:
+                        mid.set_vector_parameter_value(param_name, linear_color)
+                        unreal.log(f"Set {param_name} to {color_name}")
+                        return mid
+                    except:
+                        continue
+                unreal.log_warning(f"Could not find color parameter in material")
+                return mid
+        except Exception as e:
+            unreal.log_warning(f"Could not create dynamic material: {e}")
+
+    unreal.log_warning(f"Material creation failed for {color_name}. Create /Game/Materials/M_ColorBase with BaseColor parameter.")
     return None
 
 
@@ -156,7 +183,7 @@ def spawn_object(obj_config):
 
     # Apply color/material if specified
     if color:
-        material = create_colored_material(color)
+        material = create_colored_material(color, actor.static_mesh_component)
         if material:
             actor.static_mesh_component.set_material(0, material)
 
