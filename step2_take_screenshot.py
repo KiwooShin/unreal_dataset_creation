@@ -13,9 +13,9 @@ OUTPUT_DIR = "/Users/kiwooshin/work/unreal_dataset_creation/dataset_output"
 OBJECT_POSITION = [50, -500, 100]
 
 CAMERA_CONFIGS = [
-    {"name": "front", "position": [550, -500, 100], "filename": "sphere_front.png"},
-    {"name": "top", "position": [50, -500, 600], "filename": "sphere_top.png"},
-    {"name": "diagonal", "position": [300, -250, 454], "filename": "sphere_diagonal.png"},
+    {"name": "front", "position": [550, -500, 100], "filename": "multi_front.png"},
+    {"name": "top", "position": [50, -500, 600], "filename": "multi_top.png"},
+    {"name": "diagonal", "position": [300, -250, 454], "filename": "multi_diagonal.png"},
 ]
 
 def take_screenshot(camera_config):

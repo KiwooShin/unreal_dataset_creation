@@ -76,18 +76,18 @@ def cleanup_scene():
     unreal.log("Scene cleaned up")
 
 
-def create_colored_material(color_name, mesh_component=None):
+def apply_colored_material(color_name, mesh_component):
     """
-    Create a dynamic material instance with the specified color.
+    Create and assign a dynamic material instance with the specified color
+    directly on the mesh component's slot 0.
 
     Args:
         color_name: 'yellow', 'red', 'blue', 'green', 'white', 'gray', 'orange'
-        mesh_component: Optional StaticMeshComponent to create dynamic material from
+        mesh_component: StaticMeshComponent to apply the material to
 
     Returns:
         MaterialInstanceDynamic or None
     """
-    # Color definitions (R, G, B, A)
     colors = {
         'yellow': (1.0, 1.0, 0.0, 1.0),
         'red': (1.0, 0.0, 0.0, 1.0),
@@ -105,40 +105,20 @@ def create_colored_material(color_name, mesh_component=None):
     r, g, b, a = colors[color_name]
     linear_color = unreal.LinearColor(r, g, b, a)
 
-    # Try to load custom base material with color parameter first
+    # Load M_ColorBase material
     base_material_path = '/Engine/EngineMaterials/M_ColorBase'
+    base_material = None
     if unreal.EditorAssetLibrary.does_asset_exist(base_material_path):
         base_material = unreal.EditorAssetLibrary.load_asset(base_material_path)
-        if base_material:
-            # Create dynamic instance
-            mid = unreal.KismetMaterialLibrary.create_dynamic_material_instance(
-                unreal.EditorLevelLibrary.get_editor_world(),
-                base_material
-            )
-            if mid:
-                mid.set_vector_parameter_value("BaseColor", linear_color)
-                unreal.log(f"Created dynamic material with color: {color_name}")
-                return mid
 
-    # Fallback: Create dynamic material from mesh component's current material
-    if mesh_component:
-        try:
-            mid = mesh_component.create_dynamic_material_instance(0)
-            if mid:
-                # Try common parameter names
-                for param_name in ["BaseColor", "Color", "Base Color", "Tint"]:
-                    try:
-                        mid.set_vector_parameter_value(param_name, linear_color)
-                        unreal.log(f"Set {param_name} to {color_name}")
-                        return mid
-                    except:
-                        continue
-                unreal.log_warning(f"Could not find color parameter in material")
-                return mid
-        except Exception as e:
-            unreal.log_warning(f"Could not create dynamic material: {e}")
+    # Create dynamic material instance and assign it to slot 0 in one step
+    mid = mesh_component.create_dynamic_material_instance(0, base_material)
+    if mid:
+        mid.set_vector_parameter_value("BaseColor", linear_color)
+        unreal.log(f"Applied {color_name} material to component")
+        return mid
 
-    unreal.log_warning(f"Material creation failed for {color_name}. Create /Game/Materials/M_ColorBase with BaseColor parameter.")
+    unreal.log_warning(f"Material creation failed for {color_name}")
     return None
 
 
@@ -183,9 +163,7 @@ def spawn_object(obj_config):
 
     # Apply color/material if specified
     if color:
-        material = create_colored_material(color, actor.static_mesh_component)
-        if material:
-            actor.static_mesh_component.set_material(0, material)
+        apply_colored_material(color, actor.static_mesh_component)
 
     unreal.log(f"Spawned {obj_type} at {position} with scale {scale}")
     return actor

@@ -9,14 +9,26 @@ import json
 
 API_URL = "http://localhost:8080"
 
-# Scene configuration (matches step2)
-OBJECT_TYPE = "sphere"
-OBJECT_MESH = "/Engine/BasicShapes/Sphere"
-OBJECT_POSITION = [50, -500, 100]
-OBJECT_SCALE = [2, 2, 2]
-OBJECT_COLOR = "red"
+# Scene configuration - two objects
+OBJECTS = [
+    {
+        "type": "cube",
+        "mesh": "/Engine/BasicShapes/Cube",
+        "position": [50, -500, 100],
+        "scale": [2.0, 2.0, 2.0],
+        "color": "red",
+    },
+    {
+        "type": "sphere",
+        "mesh": "/Engine/BasicShapes/Sphere",
+        "position": [50, -300, 100],
+        "scale": [1.5, 1.5, 1.5],
+        "color": "green",
+    },
+]
 
-# Camera position - front view from step2
+# Camera points at the red cube center
+CAMERA_TARGET = [50, -500, 100]
 CAMERA_POSITION = [550, -500, 100]
 
 def main():
@@ -36,20 +48,21 @@ def main():
         print("Run in Unreal: exec(open('/Users/kiwooshin/work/unreal_dataset_creation/unreal_api_server_v2.py').read())")
         return
 
-    # Setup scene (spawn ground and object)
-    print(f"\nSetting up scene with {OBJECT_TYPE}...")
+    # Setup scene (spawn objects)
+    print(f"\nSetting up scene with {len(OBJECTS)} objects...")
     scene_config = {
         "cleanup_before": True,
         "objects": [
             {
-                "type": OBJECT_TYPE,
-                "mesh": OBJECT_MESH,
-                "position": OBJECT_POSITION,
+                "type": obj["type"],
+                "mesh": obj["mesh"],
+                "position": obj["position"],
                 "rotation": [0, 0, 0],
-                "scale": OBJECT_SCALE,
-                "color": OBJECT_COLOR,
-                "label": f"{OBJECT_COLOR.capitalize()}{OBJECT_TYPE.capitalize()}"
+                "scale": obj["scale"],
+                "color": obj["color"],
+                "label": f"{obj['color'].capitalize()}{obj['type'].capitalize()}"
             }
+            for obj in OBJECTS
         ]
     }
 
@@ -65,14 +78,14 @@ def main():
     # Position camera
     print("\nPositioning camera...")
     print(f"  Position: {CAMERA_POSITION}")
-    print(f"  Looking at: {OBJECT_POSITION}")
+    print(f"  Looking at: {CAMERA_TARGET}")
 
     # Use the capture endpoint but without actually saving - just to position camera
     capture_config = {
         "name": "position_only",
         "camera": {
             "position": CAMERA_POSITION,
-            "look_at": OBJECT_POSITION,
+            "look_at": CAMERA_TARGET,
             "fov": 90.0
         },
         "output": {
@@ -88,9 +101,10 @@ def main():
 
     print("\n" + "=" * 60)
     print("DONE - Check the Unreal viewport!")
-    print(f"Can you see the {OBJECT_COLOR} {OBJECT_TYPE}?")
+    for obj in OBJECTS:
+        print(f"  - {obj['color']} {obj['type']} at {obj['position']}")
     print("=" * 60)
-    print("\nIf you can see it, run step2_take_screenshot.py to capture images.")
+    print("\nIf you can see both objects, run step2_take_screenshot.py to capture images.")
 
 if __name__ == "__main__":
     main()
