@@ -122,8 +122,47 @@ def apply_colored_material(color_name, mesh_component):
     return None
 
 
+def apply_material(material_path, mesh_component):
+    """
+    Apply a material from asset path to mesh component.
+
+    Args:
+        material_path: Full path to material asset (e.g., '/Game/StarterContent/Materials/M_Wood_Floor_Walnut_Polished')
+        mesh_component: StaticMeshComponent to apply the material to
+
+    Returns:
+        True if successful, False otherwise
+    """
+    if not unreal.EditorAssetLibrary.does_asset_exist(material_path):
+        unreal.log_warning(f"Material not found: {material_path}")
+        return False
+
+    material = unreal.EditorAssetLibrary.load_asset(material_path)
+    if material:
+        unreal.log(f"Loaded material type: {type(material)}")
+
+        # Cast to MaterialInterface to ensure proper type
+        material_interface = unreal.MaterialInterface.cast(material)
+        if material_interface:
+            # Apply to all material slots (some meshes have multiple)
+            num_materials = mesh_component.get_num_materials()
+            for i in range(num_materials):
+                mesh_component.set_material(i, material_interface)
+            unreal.log(f"Applied material to {num_materials} slot(s): {material_path}")
+            return True
+        else:
+            unreal.log_warning(f"Could not cast to MaterialInterface: {material_path}")
+            return False
+
+    unreal.log_warning(f"Failed to load material: {material_path}")
+    return False
+
+
 def spawn_object(obj_config):
     """Spawn an object based on configuration"""
+    # Debug: log the full config to see what we receive
+    unreal.log(f"DEBUG spawn_object config: {obj_config}")
+
     editor_actor_subsystem = unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
 
     obj_type = obj_config.get('type', 'cube')
@@ -161,8 +200,20 @@ def spawn_object(obj_config):
     # Set label
     actor.set_actor_label(label)
 
-    # Apply color/material if specified
-    if color:
+    # Apply material or color if specified
+    # Priority: material path > color fallback
+    material_path = obj_config.get('material')
+    material_applied = False
+
+    unreal.log(f"DEBUG material_path={material_path}, color={color}")
+
+    if material_path and (material_path.startswith('/Game/') or material_path.startswith('/Engine/')):
+        unreal.log(f"DEBUG attempting to apply material: {material_path}")
+        material_applied = apply_material(material_path, actor.static_mesh_component)
+        unreal.log(f"DEBUG material_applied={material_applied}")
+
+    # Fallback to color if material not applied
+    if not material_applied and color:
         apply_colored_material(color, actor.static_mesh_component)
 
     unreal.log(f"Spawned {obj_type} at {position} with scale {scale}")

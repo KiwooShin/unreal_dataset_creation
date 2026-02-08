@@ -11,7 +11,7 @@ import os
 API_URL = "http://localhost:8080"
 
 # Load scene configuration from JSON file
-ASSET_FILE = os.path.join(os.path.dirname(__file__), "assets/simple_house.json")
+ASSET_FILE = os.path.join(os.path.dirname(__file__), "assets/house_with_materials.json")
 
 with open(ASSET_FILE, 'r') as f:
     config = json.load(f)
@@ -49,8 +49,9 @@ def main():
                 "position": obj["position"],
                 "rotation": obj.get("rotation", [0, 0, 0]),
                 "scale": obj["scale"],
-                "color": obj["color"],
-                "label": f"{obj['color'].capitalize()}{obj['type'].capitalize()}"
+                "color": obj.get("color"),
+                "material": obj.get("material"),  # Pass material path if specified
+                "label": obj.get("label", f"{obj.get('type', 'object').capitalize()}")
             }
             for obj in OBJECTS
         ]
@@ -92,7 +93,8 @@ def main():
     print("\n" + "=" * 60)
     print("DONE - Check the Unreal viewport!")
     for obj in OBJECTS:
-        print(f"  - {obj['color']} {obj['type']} at {obj['position']}")
+        material_info = obj.get('material', obj.get('color', 'default'))
+        print(f"  - {obj['type']} with {material_info} at {obj['position']}")
     print("=" * 60)
     print(f"\nIf you can see all {len(OBJECTS)} objects, run step2_take_screenshot.py to capture images.")
 

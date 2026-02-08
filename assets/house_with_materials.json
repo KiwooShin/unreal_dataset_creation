@@ -1,0 +1,39 @@
+{
+    "name": "house_with_materials",
+    "description": "House with textured floor and walls using StarterContent materials",
+    "objects": [
+        {
+            "type": "floor",
+            "mesh": "/Game/StarterContent/Architecture/Floor_400x400",
+            "position": [50, -500, 20],
+            "scale": [3.0, 4.0, 1.0],
+            "material": "/Game/StarterContent/Materials/M_Wood_Floor_Walnut_Polished"
+        },
+        {
+            "type": "wall",
+            "mesh": "/Game/StarterContent/Architecture/Wall_400x300",
+            "position": [50, -500, 20],
+            "scale": [3.0, 1.0, 1.0],
+            "material": "/Game/StarterContent/Materials/M_Brick_Clay_New"
+        },
+        {
+            "type": "wall",
+            "mesh": "/Game/StarterContent/Architecture/Wall_400x300",
+            "position": [50, 1100, 20],
+            "scale": [3.0, 1.0, 1.0],
+            "material": "/Game/StarterContent/Materials/M_Brick_Clay_Old"
+        },
+        {
+            "type": "wall",
+            "mesh": "/Game/StarterContent/Architecture/Wall_400x300",
+            "position": [50, 1100, 20],
+            "rotation": [0, 0, -90],
+            "scale": [4.0, 1.0, 1.0],
+            "material": "/Game/StarterContent/Materials/M_Concrete_Poured"
+        }
+    ],
+    "camera": {
+        "target": [50, 300, 100],
+        "position": [1500, 300, 800]
+    }
+}
