@@ -1,0 +1,39 @@
+{
+    "name": "simple_house",
+    "description": "Simple house floor layout",
+    "objects": [
+        {
+            "type": "floor",
+            "mesh": "/Game/StarterContent/Architecture/Floor_400x400",
+            "position": [50, -500, 20],
+            "scale": [3.0, 4.0, 1.0],
+            "color": "white"
+        },
+        {
+            "type": "wall_door",
+            "mesh": "/Game/StarterContent/Architecture/Wall_Door_400x300",
+            "position": [50, -500, 20],
+            "scale": [3.0, 1.0, 1.0],
+            "color": "red"
+        },
+        {
+            "type": "wall_door",
+            "mesh": "/Game/StarterContent/Architecture/Wall_Door_400x300",
+            "position": [50, 1100, 20],
+            "scale": [3.0, 1.0, 1.0],
+            "color": "blue"
+        },
+        {
+            "type": "wall_door",
+            "mesh": "/Game/StarterContent/Architecture/Wall_Door_400x300",
+            "position": [50, 1100, 20],
+            "rotation": [0, 0, -90],
+            "scale": [4.0, 1.0, 1.0],
+            "color": "green"
+        }
+    ],
+    "camera": {
+        "target": [50, -300, 20],
+        "position": [550, -300, 300]
+    }
+}

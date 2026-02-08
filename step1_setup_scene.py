@@ -6,34 +6,24 @@ Run this first to verify the object is visible in the viewport.
 
 import requests
 import json
+import os
 
 API_URL = "http://localhost:8080"
 
-# Scene configuration - two objects
-OBJECTS = [
-    {
-        "type": "cube",
-        "mesh": "/Engine/BasicShapes/Cube",
-        "position": [50, -500, 100],
-        "scale": [2.0, 2.0, 2.0],
-        "color": "red",
-    },
-    {
-        "type": "sphere",
-        "mesh": "/Engine/BasicShapes/Sphere",
-        "position": [50, -300, 100],
-        "scale": [1.5, 1.5, 1.5],
-        "color": "green",
-    },
-]
+# Load scene configuration from JSON file
+ASSET_FILE = os.path.join(os.path.dirname(__file__), "assets/simple_house.json")
 
-# Camera points at the red cube center
-CAMERA_TARGET = [50, -500, 100]
-CAMERA_POSITION = [550, -500, 100]
+with open(ASSET_FILE, 'r') as f:
+    config = json.load(f)
+
+OBJECTS = config["objects"]
+CAMERA_TARGET = config["camera"]["target"]
+CAMERA_POSITION = config["camera"]["position"]
 
 def main():
     print("=" * 60)
     print("STEP 1: Setup Scene and Position Camera")
+    print(f"Config: {config.get('name', 'unknown')}")
     print("=" * 60)
 
     # Check connection
@@ -57,7 +47,7 @@ def main():
                 "type": obj["type"],
                 "mesh": obj["mesh"],
                 "position": obj["position"],
-                "rotation": [0, 0, 0],
+                "rotation": obj.get("rotation", [0, 0, 0]),
                 "scale": obj["scale"],
                 "color": obj["color"],
                 "label": f"{obj['color'].capitalize()}{obj['type'].capitalize()}"
@@ -104,7 +94,7 @@ def main():
     for obj in OBJECTS:
         print(f"  - {obj['color']} {obj['type']} at {obj['position']}")
     print("=" * 60)
-    print("\nIf you can see both objects, run step2_take_screenshot.py to capture images.")
+    print(f"\nIf you can see all {len(OBJECTS)} objects, run step2_take_screenshot.py to capture images.")
 
 if __name__ == "__main__":
     main()
