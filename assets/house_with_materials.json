@@ -30,6 +30,19 @@
             "rotation": [0, 0, -90],
             "scale": [4.0, 1.0, 1.0],
             "material": "/Game/StarterContent/Materials/M_Concrete_Poured"
+        },
+        {
+            "type": "table",
+            "mesh": "/Game/StarterContent/Props/SM_TableRound",
+            "position": [650, 300, 20],
+            "scale": [1.0, 1.0, 1.0]
+        },
+        {
+            "type": "chair",
+            "mesh": "/Game/StarterContent/Props/SM_Chair",
+            "position": [650, 450, 20],
+            "rotation": [0, 0, 180],
+            "scale": [1.0, 1.0, 1.0]
         }
     ],
     "camera": {
