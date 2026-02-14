@@ -4,49 +4,66 @@
     "objects": [
         {
             "type": "floor",
+            "class_name": "floor",
             "mesh": "/Game/StarterContent/Architecture/Floor_400x400",
             "position": [50, -500, 20],
             "scale": [3.0, 4.0, 1.0],
-            "material": "/Game/StarterContent/Materials/M_Wood_Floor_Walnut_Polished"
+            "material": "/Game/StarterContent/Materials/M_Wood_Floor_Walnut_Polished",
+            "is_orientation_agnostic": true
         },
         {
             "type": "wall",
+            "class_name": "wall",
             "mesh": "/Game/StarterContent/Architecture/Wall_400x300",
             "position": [50, -500, 20],
             "scale": [3.0, 1.0, 1.0],
-            "material": "/Game/StarterContent/Materials/M_Brick_Clay_New"
+            "material": "/Game/StarterContent/Materials/M_Brick_Clay_New",
+            "is_orientation_agnostic": false
         },
         {
             "type": "wall",
+            "class_name": "wall",
             "mesh": "/Game/StarterContent/Architecture/Wall_400x300",
             "position": [50, 1100, 20],
             "scale": [3.0, 1.0, 1.0],
-            "material": "/Game/StarterContent/Materials/M_Brick_Clay_Old"
+            "material": "/Game/StarterContent/Materials/M_Brick_Clay_Old",
+            "is_orientation_agnostic": false
         },
         {
             "type": "wall",
+            "class_name": "wall",
             "mesh": "/Game/StarterContent/Architecture/Wall_400x300",
             "position": [50, 1100, 20],
             "rotation": [0, 0, -90],
             "scale": [4.0, 1.0, 1.0],
-            "material": "/Game/StarterContent/Materials/M_Concrete_Poured"
+            "material": "/Game/StarterContent/Materials/M_Concrete_Poured",
+            "is_orientation_agnostic": false
         },
         {
             "type": "table",
+            "class_name": "round_table",
             "mesh": "/Game/StarterContent/Props/SM_TableRound",
             "position": [650, 300, 20],
-            "scale": [1.0, 1.0, 1.0]
+            "scale": [1.0, 1.0, 1.0],
+            "is_orientation_agnostic": true
         },
         {
             "type": "chair",
+            "class_name": "chair",
             "mesh": "/Game/StarterContent/Props/SM_Chair",
             "position": [650, 450, 20],
             "rotation": [0, 0, 180],
-            "scale": [1.0, 1.0, 1.0]
+            "scale": [1.0, 1.0, 1.0],
+            "is_orientation_agnostic": false
         }
     ],
     "camera": {
         "target": [50, 300, 100],
-        "position": [1500, 300, 800]
+        "position": [1500, 300, 800],
+        "fov": 90.0
+    },
+    "capture_settings": {
+        "resolution": [640, 640],
+        "generate_labels": true
     }
 }

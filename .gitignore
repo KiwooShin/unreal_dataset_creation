@@ -5,3 +5,16 @@ output/
 renders/
 *.png
 !results/**/*.png
+
+# Build artifacts
+*.egg-info/
+dist/
+build/
+.coverage
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Environment
+.env
+*.env.local
